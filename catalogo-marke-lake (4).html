@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catálogo de MARKE LAKE</title>
+<style>
+:root{--blue:#0b3c5d;--bg:#ffffff;--card:#ffffff;--text:#0b3c5d;--muted:#5b7a90;--line:#d5e1ea;--soft:#eef4f8;--on-blue:#ffffff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#08202f;--card:#0d2c40;--text:#ffffff;--muted:#9db8c9;--line:#1c4560;--soft:#0b2637}}
+:root[data-theme="dark"]{--bg:#08202f;--card:#0d2c40;--text:#ffffff;--muted:#9db8c9;--line:#1c4560;--soft:#0b2637}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--blue);color:var(--on-blue);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{margin:0;font-size:clamp(20px,4.5vw,30px);letter-spacing:.5px}
+.hbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.view #exportBtn{display:none}
+#modeBtn,#exportBtn{background:#fff;color:#0b3c5d;border:0;border-radius:999px;padding:10px 18px;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap}
+main{max-width:1100px;margin:0 auto;padding:20px}
+.panel{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:22px}
+.panel h2{margin:0 0 12px;font-size:18px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted);font-weight:600}
+input,select,textarea{font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text)}
+.add{margin-top:12px;background:var(--blue);color:#fff;border:0;border-radius:8px;padding:11px 20px;font-weight:700;cursor:pointer;font-size:15px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.toolbar input,.toolbar select{flex:1;min-width:160px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.view .card{cursor:pointer;transition:transform .15s,box-shadow .15s}
+.view .card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(11,60,93,.18)}
+.thumb{aspect-ratio:1;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:56px}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.info{padding:12px}
+.info b{display:block;font-size:16px}
+.price{margin-top:8px;font-weight:800;font-size:18px}.price.big{font-size:26px}
+.tag{display:inline-block;margin-top:6px;background:var(--blue);color:#fff;font-size:12px;padding:3px 10px;border-radius:999px}
+.del{position:absolute;top:8px;right:8px;background:#fff;color:#b00020;border:1px solid #b00020;border-radius:8px;padding:4px 9px;font-size:12px;cursor:pointer;font-weight:700}
+.view .del,.view .edit,.view #editPanel{display:none}
+.edit{position:absolute;top:8px;left:8px;background:#0b3c5d;color:#fff;border:1px solid #fff;border-radius:8px;padding:4px 9px;font-size:12px;cursor:pointer;font-weight:700}
+body:not(.view) .toolbar{display:none}
+.empty{text-align:center;color:var(--muted);padding:40px 10px}
+#modal{position:fixed;inset:0;background:rgba(5,20,30,.72);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+#modal.open{display:flex}
+.box{background:var(--card);color:var(--text);border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow:auto;position:relative}
+.box img{width:100%;max-height:60vh;object-fit:cover;display:block}
+.box .ph{aspect-ratio:1;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:110px}
+.box .body{padding:18px}
+.box h3{margin:0 0 8px;font-size:24px}
+.box p{color:var(--muted);line-height:1.5;margin:12px 0 0}
+#close{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:0;background:var(--blue);color:#fff;font-size:20px;cursor:pointer;z-index:2}
+</style>
+</head>
+<body>
+<header>
+  <h1>Catálogo de MARKE LAKE</h1>
+  <div class="hbtns"><button id="exportBtn">Exportar catálogo</button><button id="modeBtn">Vista</button></div>
+</header>
+<main>
+  <section class="panel" id="editPanel">
+    <h2 id="formTitle">Agregar mochila</h2>
+    <div class="form">
+      <label>Nombre<input id="fName" placeholder="Ej. Mochila Escolar Azul"></label>
+      <label>Categoría<input id="fCat" list="cats" placeholder="Ej. Escolar"></label>
+      <datalist id="cats"><option>Todo</option><option>Escolar</option><option>Trabajo</option><option>Viajes</option></datalist>
+      <label>Imagen (al editar, déjala vacía para conservar la actual)<input id="fImg" type="file" accept="image/*"></label>
+      <label>Precio en USD (opcional)<input id="fPrice" type="number" min="0" step="0.01" placeholder="Ej. 29.99"></label>
+      <label>Detalle (opcional)<input id="fDesc" placeholder="Colores, tamaño, materiales…"></label>
+    </div>
+    <button class="add" id="addBtn">Agregar al catálogo</button>
+    <button class="add" id="cancelBtn" style="display:none;margin-left:8px;background:var(--muted)">Cancelar</button>
+  </section>
+
+  <div class="toolbar">
+    <input id="search" placeholder="Buscar mochila…">
+    <select id="filter"><option value="">Todas las categorías</option></select>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<div id="modal"><div class="box"><button id="close" aria-label="Cerrar">✕</button><div id="detail"></div></div></div>
+
+<script>
+const KEY="marke_lake_catalogo";
+let items=[],viewMode=false,pendingImg="",editingId=null;
+const $=id=>document.getElementById(id);
+try{items=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){items=[]}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){alert("No se pudo guardar: la imagen es muy pesada o el almacenamiento está lleno.")}}
+const money=p=>{const n=parseFloat(p);return isNaN(n)?"":new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n)};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+$("fImg").addEventListener("change",e=>{
+  const f=e.target.files[0];pendingImg="";if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{const im=new Image();im.onload=()=>{
+    const m=800,k=Math.min(1,m/Math.max(im.width,im.height));
+    const c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;
+    c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+    pendingImg=c.toDataURL("image/jpeg",.8)};im.src=r.result};
+  r.readAsDataURL(f);
+});
+
+$("addBtn").onclick=()=>{
+  const name=$("fName").value.trim(),cat=$("fCat").value.trim();
+  if(!name||!cat){alert("Escribe el nombre y la categoría.");return}
+  if(editingId){const it=items.find(x=>x.id===editingId);if(it){it.name=name;it.cat=cat;it.desc=$("fDesc").value.trim();it.price=$("fPrice").value;if(pendingImg)it.img=pendingImg}}else{items.push({id:Date.now(),name,cat,desc:$("fDesc").value.trim(),price:$("fPrice").value,img:pendingImg})}
+  save();pendingImg="";editingId=null;setFormMode();
+  ["fName","fCat","fDesc","fPrice","fImg"].forEach(i=>$(i).value="");
+  render();
+};
+
+function render(){
+  const q=$("search").value.toLowerCase(),f=$("filter").value;
+  const cats=[...new Set(items.map(i=>i.cat))].sort();
+  $("filter").innerHTML='<option value="">Todas las categorías</option>'+cats.map(c=>`<option ${c===f?"selected":""}>${esc(c)}</option>`).join("");
+  const list=items.filter(i=>(!f||i.cat===f)&&i.name.toLowerCase().includes(q));
+  $("grid").innerHTML=list.length?list.map(i=>`
+    <div class="card" data-id="${i.id}">
+      <button class="edit" data-edit="${i.id}">Editar</button>
+      <button class="del" data-del="${i.id}">Eliminar</button>
+      <div class="thumb">${i.img?`<img src="${i.img}" alt="${esc(i.name)}">`:"🎒"}</div>
+      <div class="info"><b>${esc(i.name)}</b><span class="tag">${esc(i.cat)}</span>${money(i.price)?`<div class="price">${money(i.price)}</div>`:""}</div>
+    </div>`).join(""):'<div class="empty" style="grid-column:1/-1">Aún no hay mochilas en el catálogo.</div>';
+}
+
+$("grid").addEventListener("click",e=>{
+  const ed=e.target.closest("[data-edit]");
+  if(ed){const it=items.find(x=>x.id==ed.dataset.edit);if(it){editingId=it.id;pendingImg="";$("fName").value=it.name;$("fCat").value=it.cat;$("fDesc").value=it.desc||"";$("fPrice").value=it.price||"";$("fImg").value="";setFormMode();$("editPanel").scrollIntoView({behavior:"smooth"})}return}
+  const d=e.target.closest("[data-del]");
+  if(d){if(confirm("¿Eliminar esta mochila?")){if(editingId==d.dataset.del){editingId=null;setFormMode();["fName","fCat","fDesc","fPrice","fImg"].forEach(i=>$(i).value="")}items=items.filter(i=>i.id!=d.dataset.del);save();render()}return}
+  if(!viewMode)return;
+  const c=e.target.closest(".card");if(!c)return;
+  const i=items.find(x=>x.id==c.dataset.id);if(!i)return;
+  $("detail").innerHTML=(i.img?`<img src="${i.img}" alt="${esc(i.name)}">`:'<div class="ph">🎒</div>')+
+    `<div class="body"><h3>${esc(i.name)}</h3><span class="tag">${esc(i.cat)}</span>${money(i.price)?`<div class="price big">${money(i.price)}</div>`:""}${i.desc?`<p>${esc(i.desc)}</p>`:""}</div>`;
+  $("modal").classList.add("open");
+});
+
+const closeModal=()=>$("modal").classList.remove("open");
+function setFormMode(){const e=!!editingId;$("formTitle").textContent=e?"Editar mochila":"Agregar mochila";$("addBtn").textContent=e?"Guardar cambios":"Agregar al catálogo";$("cancelBtn").style.display=e?"inline-block":"none"}
+$("cancelBtn").onclick=()=>{editingId=null;pendingImg="";["fName","fCat","fDesc","fPrice","fImg"].forEach(i=>$(i).value="");setFormMode()};
+$("close").onclick=closeModal;
+$("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+
+$("modeBtn").onclick=()=>{
+  viewMode=!viewMode;
+  document.body.classList.toggle("view",viewMode);
+  $("modeBtn").textContent=viewMode?"Salir de vista":"Vista";
+  document.querySelector(".toolbar").style.display=viewMode?"flex":"";
+  closeModal();
+};
+function buildCatalog(){
+const data=JSON.stringify(items).replace(/</g,String.fromCharCode(92)+"u003c");
+return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catálogo de MARKE LAKE</title>
+<style>
+:root{--blue:#0b3c5d;--bg:#ffffff;--card:#ffffff;--text:#0b3c5d;--muted:#5b7a90;--line:#d5e1ea;--soft:#eef4f8}@media (prefers-color-scheme:dark){:root{--bg:#08202f;--card:#0d2c40;--text:#ffffff;--muted:#9db8c9;--line:#1c4560;--soft:#0b2637}}*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}header{background:var(--blue);color:#fff;padding:18px 20px}h1{margin:0;font-size:clamp(20px,4.5vw,30px)}main{max-width:1100px;margin:0 auto;padding:20px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}input,select{font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);flex:1;min-width:160px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s}.card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(11,60,93,.18)}.thumb{aspect-ratio:1;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:56px}.thumb img{width:100%;height:100%;object-fit:cover}.info{padding:12px}.info b{display:block;font-size:16px}.tag{display:inline-block;margin-top:6px;background:var(--blue);color:#fff;font-size:12px;padding:3px 10px;border-radius:999px}.price{margin-top:8px;font-weight:800;font-size:18px}.price.big{font-size:26px}.empty{text-align:center;color:var(--muted);padding:40px 10px}#modal{position:fixed;inset:0;background:rgba(5,20,30,.72);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}#modal.open{display:flex}.box{background:var(--card);color:var(--text);border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow:auto;position:relative}.box img{width:100%;max-height:60vh;object-fit:cover;display:block}.ph{aspect-ratio:1;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:110px}.body{padding:18px}.body h3{margin:0 0 8px;font-size:24px}.body p{color:var(--muted);line-height:1.5;margin:12px 0 0}#close{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:0;background:var(--blue);color:#fff;font-size:20px;cursor:pointer;z-index:2}
+</style>
+</head>
+<body>
+<header><h1>Catálogo de MARKE LAKE</h1></header>
+<main>
+<div class="toolbar"><input id="search" placeholder="Buscar mochila…"><select id="filter"></select></div>
+<div class="grid" id="grid"></div>
+</main>
+<div id="modal"><div class="box"><button id="close" aria-label="Cerrar">✕</button><div id="detail"></div></div></div>
+<script>
+var items=${data};
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function money(p){var n=parseFloat(p);return isNaN(n)?"":new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n)}
+function render(){
+var q=$("search").value.toLowerCase(),f=$("filter").value,cats=[];
+items.forEach(function(i){if(cats.indexOf(i.cat)<0)cats.push(i.cat)});cats.sort();
+$("filter").innerHTML='<option value="">Todas las categorías</option>'+cats.map(function(c){return '<option'+(c===f?' selected':'')+'>'+esc(c)+'</option>'}).join("");
+var list=items.filter(function(i){return(!f||i.cat===f)&&i.name.toLowerCase().indexOf(q)>-1});
+$("grid").innerHTML=list.length?list.map(function(i){return '<div class="card" data-id="'+i.id+'"><div class="thumb">'+(i.img?'<img src="'+i.img+'" alt="'+esc(i.name)+'">':"🎒")+'</div><div class="info"><b>'+esc(i.name)+'</b><span class="tag">'+esc(i.cat)+'</span>'+(money(i.price)?'<div class="price">'+money(i.price)+'</div>':"")+'</div></div>'}).join(""):'<div class="empty" style="grid-column:1/-1">No hay mochilas para mostrar.</div>';
+}
+$("grid").addEventListener("click",function(e){
+var c=e.target.closest(".card");if(!c)return;
+var i=items.filter(function(x){return String(x.id)===c.dataset.id})[0];if(!i)return;
+$("detail").innerHTML=(i.img?'<img src="'+i.img+'" alt="'+esc(i.name)+'">':'<div class="ph">🎒</div>')+'<div class="body"><h3>'+esc(i.name)+'</h3><span class="tag">'+esc(i.cat)+'</span>'+(money(i.price)?'<div class="price big">'+money(i.price)+'</div>':"")+(i.desc?'<p>'+esc(i.desc)+'</p>':"")+'</div>';
+$("modal").classList.add("open");
+});
+function closeModal(){$("modal").classList.remove("open")}
+$("close").onclick=closeModal;
+$("modal").addEventListener("click",function(e){if(e.target.id==="modal")closeModal()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal()});
+$("search").oninput=render;$("filter").onchange=render;
+render();
+${"<"}/script>
+</body>
+</html>`;
+}
+async function exportCatalog(){
+if(!items.length){alert("Agrega al menos una mochila antes de exportar.");return}
+const html=buildCatalog();
+let dl=null;
+try{if(window.claude&&window.claude.use)dl=await window.claude.use("downloads")}catch(e){}
+if(dl){try{await dl.save({filename:"catalogo-marke-lake.html",data:html})}catch(e){if(!e||e.code!=="declined")alert("No se pudo descargar el catálogo.")}return}
+const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));a.download="catalogo-marke-lake.html";document.body.appendChild(a);a.click();a.remove();
+}
+$("exportBtn").onclick=exportCatalog;
+$("search").oninput=render;$("filter").onchange=render;
+render();
+</script>
+</body>
+</html>
